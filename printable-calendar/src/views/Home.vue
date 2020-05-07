@@ -1,8 +1,8 @@
 <template>
-  <v-layout align-center justify-center row fill-height>
+  <v-layout align-center justify-center row fill-height class="main">
     <img alt="Logo" src="../assets/logo.png" />
     <span class="divider" />
-    <HomeInfo msg="Welcome to Your Vue.js App" />
+    <HomeInfo/>
   </v-layout>
 </template>
 
@@ -19,7 +19,11 @@ export default {
 </script>
 
 <style scoped>
+.main {
+  background: linear-gradient(#FFFFFF, #8dd1ff);
+}
+
 .divider {
-  width: 40px;
+  width: 1em;
 }
 </style>
