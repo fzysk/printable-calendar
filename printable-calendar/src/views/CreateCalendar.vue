@@ -17,11 +17,6 @@
         <v-stepper-items>
             <v-stepper-content step="1">
                 <select-year />
-                <v-row justify="end">
-                    <v-col cols="auto">
-                        <v-btn class="white--text" color="indigo" large @click="currentStep += 1;">Dalej</v-btn>
-                    </v-col>
-                </v-row>
             </v-stepper-content>
             <v-stepper-content step="2">
                 <insert-events />
