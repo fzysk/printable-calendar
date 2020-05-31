@@ -7,16 +7,18 @@ export interface CalendarEvent {
     customStyle?: Style;
 }
 
-class Calendar {
+export class Calendar {
     year: number;
     holidays: CalendarEvent[] = [];
     customEvents: CalendarEvent[] = [];
     colorSettings?: ColorSettings = undefined;
 
-    constructor(year: number, holidays?: CalendarEvent[], customEvents?: CalendarEvent[]) {
+    constructor(year: number, holidays?: CalendarEvent[], 
+            customEvents?: CalendarEvent[], colorSettings?: ColorSettings) {
         this.year = year;
         this.holidays = holidays ? holidays : [];
         this.customEvents = customEvents ? customEvents : [];
+        this.colorSettings = colorSettings;
     }
 
     getMonth(month: number) : CalendarEvent[] {
