@@ -1,24 +1,24 @@
-import { Calendar, CalendarEvent } from '../models/calendar';
+import { Calendar, CalendarEvent, Month } from '../models/calendar';
 import moment, { Moment } from 'moment';
 import { EasterFinder } from './easterFinder.service';
 import { DefaultColorSettings } from '@/models/colors';
 
-class CalendarCreatorService {
+export class CalendarCreatorService {
     public static GenerateCalendar(year: number) : Calendar {
         return new Calendar(year, this.GenerateHolidays(year), undefined, new DefaultColorSettings);
     }
 
     private static GenerateHolidays(year: number): CalendarEvent[] {
         const nonMoveableEvents: CalendarEvent[] = [
-            { date: moment().year(year).month(1).day(1), text: 'Nowy Rok' },
-            { date: moment().year(year).month(1).day(6), text: 'Święto Trzech Króli' },
-            { date: moment().year(year).month(5).day(1), text: 'Święto Pracy' },
-            { date: moment().year(year).month(5).day(3), text: 'Święto Konstytucji Trzeciego Maja' },
-            { date: moment().year(year).month(7).day(15), text: 'Wniebowzięcie Najświętszej Maryi Panny' },
-            { date: moment().year(year).month(11).day(1), text: 'Wszystkich Świętych' },
-            { date: moment().year(year).month(11).day(11), text: 'Święto Niepodległości' },
-            { date: moment().year(year).month(12).day(25), text: 'Boże Narodzenie' },
-            { date: moment().year(year).month(12).day(26), text: 'Boże Narodzenie' },
+            { date: moment([year, Month.January, 1]), text: 'Nowy Rok' },
+            { date: moment([year, Month.January, 6]), text: 'Święto Trzech Króli' },
+            { date: moment([year, Month.May, 1]), text: 'Święto Pracy' },
+            { date: moment([year, Month.May, 3]), text: 'Święto Konstytucji Trzeciego Maja' },
+            { date: moment([year, Month.July, 15]), text: 'Wniebowzięcie Najświętszej Maryi Panny' },
+            { date: moment([year, Month.November, 1]), text: 'Wszystkich Świętych' },
+            { date: moment([year, Month.November, 11]), text: 'Święto Niepodległości' },
+            { date: moment([year, Month.December, 25]), text: 'Boże Narodzenie' },
+            { date: moment([year, Month.December, 26]), text: 'Boże Narodzenie' },
         ];
 
         const easter: Moment = EasterFinder.GetDate(year);

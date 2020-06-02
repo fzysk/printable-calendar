@@ -16,7 +16,7 @@
         </v-stepper-header>
         <v-stepper-items>
             <v-stepper-content step="1">
-                <select-year />
+                <select-year @next="currentStep += 1"/>
             </v-stepper-content>
             <v-stepper-content step="2">
                 <insert-events />

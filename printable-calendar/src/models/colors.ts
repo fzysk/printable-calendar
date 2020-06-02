@@ -6,7 +6,7 @@ export interface ColorSettings {
 }
 
 export interface Style {
-    color: String;
+    color: string;
     text: TextSettings;
     bold: boolean;
     italic: boolean;
@@ -15,7 +15,7 @@ export interface Style {
 
 export interface TextSettings {
     size: number;
-    fontFamily: String;
+    fontFamily: string;
     placement: TextPlacement;
 }
 

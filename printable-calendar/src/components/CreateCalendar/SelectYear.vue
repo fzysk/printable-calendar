@@ -27,6 +27,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { VSelect } from 'vuetify/lib';
+import { CalendarCreatorService } from '../../services/calendarCreator.service';
 
 const currentYear = new Date().getFullYear();
 
@@ -41,8 +42,12 @@ export default class SelectYear extends Vue {
     this.$refs.form.validate();
     
     if (this.isValid) {
-      // store value
-      // generate calendar
+      // check if we need to generate calendar once again
+      if (!this.$store.state.generatedCalendar.calendar || 
+          this.$store.state.generatedCalendar.calendar.year != this.selectedYear ) {
+        this.$store.commit('generatedCalendar/makeCalendar', this.selectedYear);
+      }
+
       this.$emit("next");
     }
   }

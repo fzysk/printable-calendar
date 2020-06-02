@@ -1,4 +1,5 @@
 import moment, { Moment } from "moment";
+import { Month } from '@/models/calendar';
 
 interface ABCoefficients {
     startYear: number;
@@ -21,8 +22,8 @@ export class EasterFinder {
     ];
 
     public static GetDate(year: number): Moment {
-        const easter: Moment = moment().year(year).month(3).day(22);
-        const coeff = this.coefficients.find((c) => c.startYear >= year && c.endYear <= year);
+        const easter: Moment = moment([year, Month.March, 22]);
+        const coeff = this.coefficients.find((c) => c.startYear <= year && c.endYear >= year);
 
         if (!coeff) {
             throw new Error("Sorry, this year is not supported");

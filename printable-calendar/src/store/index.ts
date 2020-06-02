@@ -1,11 +1,17 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, { StoreOptions } from "vuex";
+import { State } from './types';
+import { generatedCalendar } from './generatedCalendar/index';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
-});
+const store: StoreOptions<State> = {
+  state: {
+    // states for whole app (e.g. language)
+  },
+  modules: {
+    generatedCalendar
+  }
+}
+
+export default new Vuex.Store<State>(store);
