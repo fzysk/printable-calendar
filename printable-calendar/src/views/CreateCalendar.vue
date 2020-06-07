@@ -19,15 +19,7 @@
                 <select-year @next="currentStep += 1"/>
             </v-stepper-content>
             <v-stepper-content step="2">
-                <insert-events />
-                <v-row justify="end">
-                    <v-col cols="auto">
-                        <v-btn color="indigo" large outlined @click="currentStep -= 1;">Wstecz</v-btn>
-                    </v-col>
-                    <v-col cols="auto">
-                        <v-btn class="white--text" color="indigo" large @click="currentStep += 1;">Dalej</v-btn>
-                    </v-col>
-                </v-row>
+                <insert-events @prev="currentStep -= 1" @next="currentStep += 1"/>
             </v-stepper-content>
             <v-stepper-content step="3">
                 <select-colors />

@@ -39,7 +39,7 @@ export default class SelectYear extends Vue {
   isValid = false;
 
   onClick() {
-    this.$refs.form.validate();
+    (this.$refs.form as Vue & { validate: () => boolean }).validate();
     
     if (this.isValid) {
       // check if we need to generate calendar once again
