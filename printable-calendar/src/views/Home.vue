@@ -2,7 +2,7 @@
   <v-layout align-center justify-center row fill-height class="main">
     <img alt="Logo" src="../assets/logo.png" />
     <span class="divider" />
-    <HomeInfo/>
+    <HomeInfo />
   </v-layout>
 </template>
 
@@ -20,7 +20,7 @@ export default {
 
 <style scoped>
 .main {
-  background: linear-gradient(#FFFFFF, #8dd1ff);
+  background: linear-gradient(#ffffff, #8dd1ff);
 }
 
 .divider {
