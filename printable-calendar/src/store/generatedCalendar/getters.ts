@@ -17,6 +17,13 @@ export const getters: GetterTree<CalendarState, State> = {
 
         return [];
     },
+    getNonHolidayEvents(state): CalendarEvent[] {
+        if (state.calendar) {
+            return state.calendar.nonHolidayEvents;
+        }
+
+        return [];
+    },
     getHolidays(state): CalendarEvent[] {
         if (state.calendar) {
             return state.calendar.holidays;

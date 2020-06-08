@@ -10,13 +10,15 @@ export interface CalendarEvent {
 export class Calendar {
     year: number;
     holidays: CalendarEvent[] = [];
+    nonHolidayEvents: CalendarEvent[] = [];
     customEvents: CalendarEvent[] = [];
     colorSettings?: ColorSettings = undefined;
 
-    constructor(year: number, holidays?: CalendarEvent[], 
+    constructor(year: number, holidays?: CalendarEvent[], nonHolidayEvents?: CalendarEvent[],
             customEvents?: CalendarEvent[], colorSettings?: ColorSettings) {
         this.year = year;
         this.holidays = holidays ? holidays : [];
+        this.nonHolidayEvents = nonHolidayEvents ? nonHolidayEvents : [];
         this.customEvents = customEvents ? customEvents : [];
         this.colorSettings = colorSettings;
     }

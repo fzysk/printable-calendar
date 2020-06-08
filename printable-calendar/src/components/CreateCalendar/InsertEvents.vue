@@ -7,6 +7,9 @@
       <span class="grayed-text">
         To doskonały moment na personalizację swojego kalendarza
       </span>
+      <span class="grayed-text">
+        Jeżeli nie chcesz tego robić, po prostu przejdź dalej
+      </span>
       <br />
       <v-btn icon @click="editing = true">
         <v-icon color="indigo" large>mdi-plus-circle</v-icon>
@@ -63,7 +66,16 @@
         <calendar-events-list
           :events="customEvents"
           header="Dodane wydarzenia"
-          noEvents="Brak dodanych wydarzeń! Kliknij dodaj, by dodać wydarzenia"
+          noEvents="Brak dodanych wydarzeń! Kliknij <i>dodaj</i>, by dodać wydarzenia"
+        />
+      </v-col>
+      <v-spacer />
+      <v-col cols="4">
+        <!-- non-holiday events -->
+        <calendar-events-list
+          :events="nonHolidayEvents"
+          header="Inne święta"
+          noEvents="Brak innych świąt!"
         />
       </v-col>
       <v-spacer />
@@ -80,18 +92,24 @@
     <!-- buttons -->
     <v-row justify="end" v-if="editing">
       <v-col cols="auto">
-        <v-btn color="indigo" large outlined @click="editing = false">
+        <v-btn color="indigo" large outlined @click="cancelAdding">
           Anuluj
         </v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-btn class="white--text" color="indigo" large @click="addEvent">
+        <v-btn
+          class="white--text"
+          color="indigo"
+          large
+          @keyup.enter="addEvent"
+          @click="addEvent"
+        >
           Dodaj
         </v-btn>
       </v-col>
     </v-row>
     <v-row v-else>
-      <v-col cols="auto">
+      <v-col cols="auto" v-if="customEvents.length">
         <v-btn color="green" large @click="editing = true">Dodaj</v-btn>
       </v-col>
       <v-spacer />
@@ -115,6 +133,8 @@ import { CalendarEvent } from "../../models/calendar";
 import CalendarEventsList from "../CalendarEventsList.vue";
 import moment from "moment";
 
+const undefinedDate = moment([1970, 1, 1]);
+
 @Component({
   components: {
     CalendarEventsList
@@ -125,7 +145,7 @@ export default class InsertEvents extends Vue {
   isValid = true;
   editing = false;
   titleRule = [(v: unknown) => !!v || "Wprowadź tytuł"];
-  insertedEvent: CalendarEvent = this.startEvent;
+  insertedEvent: CalendarEvent = { date: undefinedDate, text: "" };
 
   addEvent() {
     (this.$refs.form as Vue & { validate: () => boolean }).validate();
@@ -136,9 +156,13 @@ export default class InsertEvents extends Vue {
         this.insertedEvent
       );
 
-      this.insertedEvent = this.startEvent;
-      this.editing = false;
+      this.$nextTick(this.cancelAdding);
     }
+  }
+
+  cancelAdding() {
+    this.insertedEvent = { date: undefinedDate, text: "" };
+    this.editing = false;
   }
 
   // calendar range
@@ -153,23 +177,12 @@ export default class InsertEvents extends Vue {
     return year + "-12-31";
   }
 
-  get startEvent(): CalendarEvent {
-    const year: number = this.$store.getters["generatedCalendar/getYear"];
-    const today = moment()
-      .hour(0)
-      .minute(0)
-      .seconds(0);
-
-    if (today.year() == year) {
-      return { date: today, text: "" };
-    } else {
-      return { date: moment([year, today.month(), today.date()]), text: "" };
-    }
-  }
-
   // events' lists
   get customEvents() {
     return this.$store.getters["generatedCalendar/getCustomEvents"];
+  }
+  get nonHolidayEvents() {
+    return this.$store.getters["generatedCalendar/getNonHolidayEvents"];
   }
   get holidayEvents() {
     return this.$store.getters["generatedCalendar/getHolidays"];
@@ -177,6 +190,19 @@ export default class InsertEvents extends Vue {
 
   // date property
   get eventDate() {
+    if (this.insertedEvent.date.isSame(undefinedDate)) {
+      const today = moment()
+        .hour(0)
+        .minute(0)
+        .second(0);
+
+      this.insertedEvent.date = moment([
+        this.$store.getters["generatedCalendar/getYear"],
+        today.month(),
+        today.day()
+      ]);
+    }
+
     return this.insertedEvent.date.format("YYYY-MM-DD");
   }
   set eventDate(date) {

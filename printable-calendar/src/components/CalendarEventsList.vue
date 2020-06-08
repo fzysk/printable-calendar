@@ -21,7 +21,7 @@
         </v-list-item>
       </v-list-item-group>
     </v-list>
-    <v-alert v-else type="warning">{{ noEvents }}</v-alert>
+    <v-alert v-else type="warning" v-html="noEvents" />
   </div>
 </template>
 

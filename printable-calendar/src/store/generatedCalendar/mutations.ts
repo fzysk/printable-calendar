@@ -10,7 +10,16 @@ export const mutations: MutationTree<CalendarState> = {
 
     addCustomEvent(state, event: CalendarEvent) {
         if (state.calendar) {
-            state.calendar.customEvents.push(event);
+            // find index to insert an event
+            let i = 0;
+            for (; i < state.calendar.customEvents.length; i++) {
+                const e = state.calendar.customEvents[i];
+                if (e.date.isAfter(event.date)) {
+                    break;
+                }
+            }
+
+            state.calendar.customEvents.splice(i, 0, event);
         }
     }
 }
