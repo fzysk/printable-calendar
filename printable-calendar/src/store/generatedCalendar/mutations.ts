@@ -21,5 +21,33 @@ export const mutations: MutationTree<CalendarState> = {
 
             state.calendar.customEvents.splice(i, 0, event);
         }
+    },
+
+    deleteCustomEvents(state, events: CalendarEvent[]) {
+        events.forEach(e => {
+            for (let i = (state.calendar?.customEvents.length ?? 0) - 1; i >= 0; i--) {
+                if (state.calendar?.customEvents[i] === e) {
+                    state.calendar.customEvents.splice(i, 1);
+                }
+            }
+        });
+    },
+    deleteNonHolidays(state, events: CalendarEvent[]) {
+        events.forEach(e => {
+            for (let i = (state.calendar?.customEvents.length ?? 0) - 1; i >= 0; i--) {
+                if (state.calendar?.nonHolidayEvents[i] === e) {
+                    state.calendar.nonHolidayEvents.splice(i, 1);
+                }
+            }
+        });
+    },
+    deleteHolidays(state, events: CalendarEvent[]) {
+        events.forEach(e => {
+            for (let i = (state.calendar?.holidays.length ?? 0) - 1; i >= 0; i--) {
+                if (state.calendar?.holidays[i] === e) {
+                    state.calendar.holidays.splice(i, 1);
+                }
+            }
+        });
     }
 }

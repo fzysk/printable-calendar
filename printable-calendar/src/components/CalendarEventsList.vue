@@ -7,7 +7,12 @@
       style="max-height: 55vh"
       class="overflow-y-auto"
     >
-      <v-list-item-group color="indigo">
+      <v-list-item-group
+        multiple
+        color="indigo"
+        v-model="selectedEvents"
+        @change="changeSelectedEvents"
+      >
         <v-list-item v-for="(event, i) in events" :key="i">
           <v-list-item-content>
             <v-tooltip bottom>
@@ -34,6 +39,13 @@ export default class CalendarEventsList extends Vue {
   @Prop() noEvents!: string;
   @Prop({ required: true }) header!: string;
   @Prop({ required: true }) events!: CalendarEvent[];
+
+  selectedEvents: CalendarEvent[] = [];
+
+  changeSelectedEvents(e: number[]) {
+    const selected: CalendarEvent[] = e.map(x => this.events[x]);
+    this.$emit("changed", selected);
+  }
 }
 </script>
 

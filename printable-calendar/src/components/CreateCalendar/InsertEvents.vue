@@ -65,6 +65,7 @@
         <!-- custom events -->
         <calendar-events-list
           :events="customEvents"
+          @changed="deleteCustomEvents"
           header="Dodane wydarzenia"
           noEvents="Brak dodanych wydarzeń! Kliknij <i>dodaj</i>, by dodać wydarzenia"
         />
@@ -74,6 +75,7 @@
         <!-- non-holiday events -->
         <calendar-events-list
           :events="nonHolidayEvents"
+          @changed="deleteNonHolidays"
           header="Inne święta"
           noEvents="Brak innych świąt!"
         />
@@ -83,6 +85,7 @@
         <!-- holidays -->
         <calendar-events-list
           :events="holidayEvents"
+          @changed="deleteHolidays"
           header="Święta"
           noEvents="Brak świąt!"
         />
@@ -111,6 +114,33 @@
     <v-row v-else>
       <v-col cols="auto" v-if="customEvents.length">
         <v-btn color="green" large @click="editing = true">Dodaj</v-btn>
+      </v-col>
+      <v-col cols="auto" v-if="customEvents.length">
+        <v-dialog v-model="modal" persistent>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-on="on"
+              color="red darken-1"
+              large
+              :disabled="deleteBtnDisabled"
+            >
+              Usuń
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="headline">
+              Jesteś pewien, że chcesz usunąć to/te wydarzenia?
+            </v-card-title>
+            <v-card-text>Tej akcji nie jesteś w stanie cofnąć.</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn text @click="dialog = false">Anuluj</v-btn>
+              <v-btn color="red darken-1" text @click="deleteEvents">
+                Usuń
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
       <v-spacer />
       <v-col cols="auto">
@@ -141,11 +171,17 @@ const undefinedDate = moment([1970, 1, 1]);
   }
 })
 export default class InsertEvents extends Vue {
+  modal = false;
   menu = false;
   isValid = true;
   editing = false;
   titleRule = [(v: unknown) => !!v || "Wprowadź tytuł"];
   insertedEvent: CalendarEvent = { date: undefinedDate, text: "" };
+  eventsToDelete: {
+    customEvents: CalendarEvent[];
+    nonHolidays: CalendarEvent[];
+    holidays: CalendarEvent[];
+  } = { customEvents: [], nonHolidays: [], holidays: [] };
 
   addEvent() {
     (this.$refs.form as Vue & { validate: () => boolean }).validate();
@@ -160,9 +196,53 @@ export default class InsertEvents extends Vue {
     }
   }
 
+  deleteCustomEvents(e: CalendarEvent[]) {
+    if (e) {
+      this.eventsToDelete.customEvents.push(...e);
+    }
+  }
+  deleteNonHolidays(e: CalendarEvent[]) {
+    if (e) {
+      this.eventsToDelete.nonHolidays.push(...e);
+    }
+  }
+  deleteHolidays(e: CalendarEvent[]) {
+    if (e) {
+      this.eventsToDelete.holidays.push(...e);
+    }
+  }
+
+  deleteEvents() {
+    this.$store.commit(
+      "generatedCalendar/deleteCustomEvents",
+      this.eventsToDelete.customEvents
+    );
+    this.$store.commit(
+      "generatedCalendar/deleteNonHolidays",
+      this.eventsToDelete.nonHolidays
+    );
+    this.$store.commit(
+      "generatedCalendar/deleteHolidays",
+      this.eventsToDelete.holidays
+    );
+
+    this.eventsToDelete.customEvents = [];
+    this.eventsToDelete.nonHolidays = [];
+    this.eventsToDelete.holidays = [];
+
+    this.modal = false;
+  }
+
   cancelAdding() {
     this.insertedEvent = { date: undefinedDate, text: "" };
     this.editing = false;
+  }
+
+  // delete button disabled
+  get deleteBtnDisabled() {
+    return this.eventsToDelete.customEvents.length == 0 &&
+      this.eventsToDelete.nonHolidays.length == 0 &&
+      this.eventsToDelete.holidays.length == 0;
   }
 
   // calendar range
@@ -199,7 +279,7 @@ export default class InsertEvents extends Vue {
       this.insertedEvent.date = moment([
         this.$store.getters["generatedCalendar/getYear"],
         today.month(),
-        today.day()
+        today.date()
       ]);
     }
 
