@@ -116,7 +116,7 @@
         <v-btn color="green" large @click="editing = true">Dodaj</v-btn>
       </v-col>
       <v-col cols="auto" v-if="customEvents.length">
-        <v-dialog v-model="modal" persistent>
+        <v-dialog v-model="modal" width="48%">
           <template v-slot:activator="{ on }">
             <v-btn
               v-on="on"
@@ -134,7 +134,7 @@
             <v-card-text>Tej akcji nie jesteś w stanie cofnąć.</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn text @click="dialog = false">Anuluj</v-btn>
+              <v-btn text @click="modal = false">Anuluj</v-btn>
               <v-btn color="red darken-1" text @click="deleteEvents">
                 Usuń
               </v-btn>

@@ -24,28 +24,43 @@ export const mutations: MutationTree<CalendarState> = {
     },
 
     deleteCustomEvents(state, events: CalendarEvent[]) {
+        if (!state.calendar) {
+            return;
+        }
+        
         events.forEach(e => {
-            for (let i = (state.calendar?.customEvents.length ?? 0) - 1; i >= 0; i--) {
-                if (state.calendar?.customEvents[i] === e) {
-                    state.calendar.customEvents.splice(i, 1);
+            for (let i = state.calendar!.customEvents.length - 1; i >= 0; i--) {
+                const event = state.calendar!.customEvents[i];
+                if (event.date.isSame(e.date) && event.text === e.text) {
+                    state.calendar!.customEvents.splice(i, 1);
                 }
             }
         });
     },
     deleteNonHolidays(state, events: CalendarEvent[]) {
+        if (!state.calendar) {
+            return;
+        }
+        
         events.forEach(e => {
-            for (let i = (state.calendar?.customEvents.length ?? 0) - 1; i >= 0; i--) {
-                if (state.calendar?.nonHolidayEvents[i] === e) {
-                    state.calendar.nonHolidayEvents.splice(i, 1);
+            for (let i = state.calendar!.nonHolidayEvents.length - 1; i >= 0; i--) {
+                const event = state.calendar!.nonHolidayEvents[i];
+                if (event.date.isSame(e.date) && event.text === e.text) {
+                    state.calendar!.nonHolidayEvents.splice(i, 1);
                 }
             }
         });
     },
     deleteHolidays(state, events: CalendarEvent[]) {
+        if (!state.calendar) {
+            return;
+        }
+
         events.forEach(e => {
-            for (let i = (state.calendar?.holidays.length ?? 0) - 1; i >= 0; i--) {
-                if (state.calendar?.holidays[i] === e) {
-                    state.calendar.holidays.splice(i, 1);
+            for (let i = state.calendar!.holidays.length - 1; i >= 0; i--) {
+                const event = state.calendar!.holidays[i];
+                if (event.date.isSame(e.date) && event.text === e.text) {
+                    state.calendar!.holidays.splice(i, 1);
                 }
             }
         });
