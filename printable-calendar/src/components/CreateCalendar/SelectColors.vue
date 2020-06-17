@@ -5,13 +5,23 @@
       Opcjonalnie pozostań przy obecnej i wyświetl kalendarz
     </v-card-subtitle>
     <v-card-text>
-
-      <color-samples-list />
+      <v-container fluid>
+        <v-row align-content="center">
+          <v-col cols="2">
+            Kolor górnego tekstu:
+          </v-col>
+          <v-col cols="1">
+            <color-samples-list :colors="titleColors"/>
+          </v-col>
+          <v-spacer />
+        </v-row>
+      </v-container>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
+import { titleColors } from "../ColorSamplesList/colors";
 import ColorSamplesList from "./../ColorSamplesList/ColorSamplesList.vue";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -20,7 +30,9 @@ import { Component, Vue } from "vue-property-decorator";
     ColorSamplesList
   }
 })
-export default class SelectColors extends Vue {}
+export default class SelectColors extends Vue {
+  titleColors = titleColors;  
+}
 </script>
 
 <style scoped lang="scss"></style>

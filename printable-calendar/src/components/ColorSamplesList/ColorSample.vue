@@ -1,6 +1,8 @@
 <template>
-  <div class="color-sample" :style="colorClass">
-    <v-icon v-if="checked">mdi_done</v-icon>
+  <div class="color-sample" :style="colorClass" @click="$emit('click')">
+      <v-icon v-if="checked">
+        mdi-check
+      </v-icon>
   </div>
 </template>
 
@@ -25,6 +27,15 @@ export default class ColorSample extends Vue {
   border-radius: 11px;
   cursor: pointer;
   color: #cccccc;
+
+  position: relative;
+  display: inline-block;
+
+  & > i {
+    position: absolute;
+    left: 9px;
+    top: 9px;
+  }
 }
 
 .color-sample-selected {
