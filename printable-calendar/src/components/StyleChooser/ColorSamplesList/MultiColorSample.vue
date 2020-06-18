@@ -6,13 +6,16 @@
     transition="slide-x-transition"
   >
     <template v-slot:activator="{ on }">
-      <div class="multi-color-sample" :style="colorClass" v-on="on">
+      <div
+        class="multi-color-sample"
+        :style="colorClass"
+        v-on="on"
+        @click="$emit('click')"
+      >
         <v-icon>mdi-palette</v-icon>
       </div>
     </template>
-    <v-color-picker v-model="pickerColor"
-      :hide-inputs="false"
-    ></v-color-picker>
+    <v-color-picker v-model="pickerColor" :hide-inputs="false"></v-color-picker>
   </v-menu>
 </template>
 
@@ -21,8 +24,7 @@ import { Component, Vue, Prop, Model } from "vue-property-decorator";
 
 @Component
 export default class MultiColorSample extends Vue {
-  @Model('input', { type: String }) color!: string;
-  @Prop() startColor!: string;
+  @Model("input", { type: String }) color!: string;
   @Prop() checked!: boolean;
   menu = false;
 
@@ -31,10 +33,10 @@ export default class MultiColorSample extends Vue {
   }
 
   get pickerColor() {
-      return this.color ? this.color : this.startColor;
+    return this.color;
   }
   set pickerColor(color: string) {
-      this.color = color;
+    this.$emit("input", color);
   }
 }
 </script>

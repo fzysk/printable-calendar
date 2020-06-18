@@ -6,32 +6,26 @@
     </v-card-subtitle>
     <v-card-text>
       <v-container fluid>
-        <v-row align-content="center">
-          <v-col cols="2">
-            Kolor górnego tekstu:
-          </v-col>
-          <v-col cols="1">
-            <color-samples-list :colors="titleColors"/>
-          </v-col>
-          <v-spacer />
-        </v-row>
+        <style-chooser :startingColors="titleColors" />
       </v-container>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
-import { titleColors } from "../ColorSamplesList/colors";
-import ColorSamplesList from "./../ColorSamplesList/ColorSamplesList.vue";
+import { titleColors } from "../../models/colors";
+import StyleChooser from "../StyleChooser/StyleChooser.vue";
 import { Component, Vue } from "vue-property-decorator";
+import { ColorSettings, DefaultColorSettings } from "../../models/colors";
 
 @Component({
   components: {
-    ColorSamplesList
+    StyleChooser
   }
 })
 export default class SelectColors extends Vue {
-  titleColors = titleColors;  
+  titleColors = titleColors;
+  colorSettings: ColorSettings = new DefaultColorSettings();
 }
 </script>
 

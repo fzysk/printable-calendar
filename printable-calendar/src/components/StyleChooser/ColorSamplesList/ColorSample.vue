@@ -1,8 +1,8 @@
 <template>
   <div class="color-sample" :style="colorClass" @click="$emit('click')">
-      <v-icon v-if="checked">
-        mdi-check
-      </v-icon>
+    <v-icon v-if="checked">
+      mdi-check
+    </v-icon>
   </div>
 </template>
 
