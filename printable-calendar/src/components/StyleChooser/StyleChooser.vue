@@ -1,35 +1,49 @@
 <template>
-  <v-row align-content="center">
-    <v-col cols="2">
-      Kolor górnego tekstu:
-    </v-col>
-    <v-col cols="1">
-      <color-samples-list :colors="startingColors" />
-    </v-col>
-    <v-spacer />
-    <v-col cols="1">
-      Style:
-    </v-col>
-    <v-col cols="auto"> </v-col>
-  </v-row>
+  <div class="styleChooser">
+    <v-row>
+      <h3>{{ headerText }}</h3>
+    </v-row>
+    <v-row align-content="center">
+      <v-col cols="auto">
+        <v-row> Kolor: </v-row>
+        <v-row class="mt-16">
+          <color-samples-list
+            :colors="startingColors"
+            @change="chosenStyle.color = $event"
+          />
+        </v-row>
+      </v-col>
+      <v-spacer />
+      <text-chooser
+        :defaultText="chosenStyle.text"
+        @change="chosenStyle.text = $event"
+      />
+      <v-spacer />
+    </v-row>
+  </div>
 </template>
 
 <script lang="ts">
 import ColorSamplesList from "./ColorSamplesList/ColorSamplesList.vue";
-import { Component, Vue, Prop } from "vue-property-decorator";
+import TextChooser from "./TextChooser/TextChooser.vue";
+import { Component, Vue, Prop, Model } from "vue-property-decorator";
 import { Style } from "../../models/colors";
 
 @Component({
   components: {
-    ColorSamplesList
+    ColorSamplesList,
+    TextChooser
   }
 })
 export default class StyleChooser extends Vue {
-  @Prop() defaultStyle!: Style;
+  @Model("change", { type: Object }) chosenStyle!: Style;
   @Prop() startingColors!: string[];
-
-  
+  @Prop() headerText!: string;
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.mt-16 {
+  margin-top: 16px;
+}
+</style>

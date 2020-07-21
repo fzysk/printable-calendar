@@ -8,15 +8,15 @@ export interface ColorSettings {
 export interface Style {
     color: string;
     text: TextSettings;
-    bold: boolean;
-    italic: boolean;
-    underline: boolean;
 }
 
 export interface TextSettings {
     size: number;
     fontFamily: string;
     placement: TextPlacement;
+    bold: boolean;
+    italic: boolean;
+    underline: boolean;
 }
 
 export enum TextPlacement {
@@ -31,44 +31,44 @@ export class DefaultColorSettings implements ColorSettings {
         text: {
             size: 12,
             fontFamily: "Arial",
-            placement: TextPlacement.Left
+            placement: TextPlacement.Left,
+            bold: true,
+            italic: false,
+            underline: false
         },
-        bold: true,
-        italic: false,
-        underline: false
     };
     holidayStyle: Style = { 
         color: "#bf0000", 
         text: {
             size: 12,
             fontFamily: "Arial",
-            placement: TextPlacement.Left
+            placement: TextPlacement.Left,
+            bold: true,
+            italic: false,
+            underline: false
         },
-        bold: true,
-        italic: false,
-        underline: false
     };
     weekendStyle: Style = { 
         color: "#bf0000", 
         text: {
             size: 12,
             fontFamily: "Arial",
-            placement: TextPlacement.Left
+            placement: TextPlacement.Left,
+            bold: true,
+            italic: false,
+            underline: false
         },
-        bold: true,
-        italic: false,
-        underline: false
     };
     monthStyle: Style = { 
         color: "#333333", 
         text: {
             size: 15,
             fontFamily: "Arial",
-            placement: TextPlacement.Center
+            placement: TextPlacement.Center,
+            bold: true,
+            italic: false,
+            underline: false
         },
-        bold: true,
-        italic: false,
-        underline: false
     };
 }
 

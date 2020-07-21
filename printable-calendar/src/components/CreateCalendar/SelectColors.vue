@@ -6,7 +6,11 @@
     </v-card-subtitle>
     <v-card-text>
       <v-container fluid>
-        <style-chooser :startingColors="titleColors" />
+        <style-chooser
+          v-model="colorSettings.customEventStyle"
+          :startingColors="titleColors"
+          headerText="Górny tekst"
+        />
       </v-container>
     </v-card-text>
   </v-card>
