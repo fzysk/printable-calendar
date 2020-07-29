@@ -34,7 +34,7 @@ export const getters: GetterTree<CalendarState, State> = {
     /**
      * Returns array of events from calendar day-by-day 
      */
-    getMonthEvents(state, month: number): CalendarEvent[] {
+    getMonthEvents: (state) => (month: number): CalendarEvent[] => {
         if (state.calendar) {
             return state.calendar.getMonth(month);
         }

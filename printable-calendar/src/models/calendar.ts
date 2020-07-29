@@ -24,10 +24,10 @@ export class Calendar {
     }
 
     getMonth(month: number) : CalendarEvent[] {
-        const m = moment().year(this.year).month(month);
+        const m = moment([this.year, month, 1]);
         const daysInMonth = m.daysInMonth();
         const result : CalendarEvent[] = [...Array(daysInMonth).keys()].map((day) => {
-            const date = m.clone().day(day + 1);
+            const date = moment([this.year, month, day + 1]);
             
             const bussinessDay: CalendarEvent = {
                 date: date,
@@ -35,15 +35,23 @@ export class Calendar {
             };
 
             if (this.customEvents.length > 0) {
-                const customEvent = this.customEvents.find((e) => e.date == date);
+                const customEvent = this.customEvents.find((e) => e.date.isSame(date));
 
                 if (customEvent) {
                     return customEvent;
                 }
             }
+
+            if (this.nonHolidayEvents.length > 0) {
+                const nonHolidayEvent = this.nonHolidayEvents.find((e) => e.date.isSame(date));
+
+                if (nonHolidayEvent) {
+                    return nonHolidayEvent;
+                }
+            }
             
             if (this.holidays.length > 0) {
-                const holiday = this.holidays.find((e) => e.date == date);
+                const holiday = this.holidays.find((e) => e.date.isSame(date));
 
                 if (holiday) {
                     return holiday;

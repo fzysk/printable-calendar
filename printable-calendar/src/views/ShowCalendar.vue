@@ -35,7 +35,7 @@
         </v-slide-x-transition>
       </v-layout>
     </div>
-    <calendar-month />
+    <calendar-month :month="currentMonth" />
   </div>
 </template>
 
@@ -63,13 +63,6 @@ export default class ShowCalendar extends Vue {
   }
   set currentMonth(month: number) {
     this.month = month;
-  }
-  
-
-  get monthEvents() {
-    return this.$store.getters["generatedCalendar/getMonthEvents"](
-      this.currentMonth
-    );
   }
 
   get headerLocale() {
@@ -124,5 +117,6 @@ export default class ShowCalendar extends Vue {
 .month-picker {
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
+  height: 2.2rem;
 }
 </style>
