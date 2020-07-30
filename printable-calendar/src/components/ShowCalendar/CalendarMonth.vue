@@ -33,7 +33,7 @@ export default class CalendarMonth extends Vue {
   lastDayOfMonth(day: number): boolean {
     const year: number = this.$store.getters["generatedCalendar/getYear"];
     const toCompare = moment([year, this.month, day]);
-    return moment(toCompare).date(0).add(1, "month").isSame(toCompare);
+    return moment(toCompare).endOf("month").add(1, "second").subtract(1, "day").isSame(toCompare);
   }
 
   formatDate(date: Moment): string {
