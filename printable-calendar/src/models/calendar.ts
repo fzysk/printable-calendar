@@ -23,10 +23,10 @@ export class Calendar {
         this.colorSettings = colorSettings;
     }
 
-    getMonth(month: number) : CalendarEvent[] {
+    getMonth(month: number) : CalendarEvent[][] {
         const m = moment([this.year, month, 1]);
         const daysInMonth = m.daysInMonth();
-        const result : CalendarEvent[] = [...Array(daysInMonth).keys()].map((day) => {
+        const result : CalendarEvent[][] = [...Array(daysInMonth).keys()].map((day) => {
             const date = moment([this.year, month, day + 1]);
             
             const bussinessDay: CalendarEvent = {
@@ -34,31 +34,35 @@ export class Calendar {
                 text: ''
             };
 
-            if (this.customEvents.length > 0) {
-                const customEvent = this.customEvents.find((e) => e.date.isSame(date));
-
-                if (customEvent) {
-                    return customEvent;
-                }
-            }
-
-            if (this.nonHolidayEvents.length > 0) {
-                const nonHolidayEvent = this.nonHolidayEvents.find((e) => e.date.isSame(date));
-
-                if (nonHolidayEvent) {
-                    return nonHolidayEvent;
-                }
-            }
+            const events: CalendarEvent[] = [];
             
             if (this.holidays.length > 0) {
                 const holiday = this.holidays.find((e) => e.date.isSame(date));
 
                 if (holiday) {
-                    return holiday;
+                    events.push(holiday);
+                }
+            }
+            if (this.nonHolidayEvents.length > 0) {
+                const nonHolidayEvent = this.nonHolidayEvents.find((e) => e.date.isSame(date));
+
+                if (nonHolidayEvent) {
+                    events.push(nonHolidayEvent);
+                }
+            }
+            if (this.customEvents.length > 0) {
+                const customEvent = this.customEvents.find((e) => e.date.isSame(date));
+
+                if (customEvent) {
+                    events.push(customEvent);
                 }
             }
 
-            return bussinessDay;
+            if (events.length == 0) {
+                events.push(bussinessDay);
+            }
+
+            return events;
         });
 
         return result;
