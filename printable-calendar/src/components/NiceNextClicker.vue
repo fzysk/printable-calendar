@@ -67,10 +67,7 @@ export default class NiceNextClicker extends Vue {
             endPart += '0,' + containerHeight;
         }
 
-        const path = movePart + ' ' + bezierPart + ' ' + endPart;
-        console.log(path);
-
-        return path;
+        return movePart + ' ' + bezierPart + ' ' + endPart;
     }
 
     get Qy() : number {

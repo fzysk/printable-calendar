@@ -8,9 +8,7 @@
     />
     <div class="calendar-view">
       <div class="calendar-header">
-        <span class="header">
-          {{ headerLocale }}
-        </span>
+        <span class="header">{{ headerLocale }}</span>
       </div>
       <calendar-month :month="currentMonth" />
     </div>
@@ -90,6 +88,14 @@ export default class ShowCalendar extends Vue {
     padding: 0;
     line-height: 23px;
   }
+
+  .header {
+    margin-top: 0.4rem;
+  }
+
+  .previous-month, .next-month {
+    display: none;
+  }
 }
 
 .calendar {
@@ -118,6 +124,7 @@ export default class ShowCalendar extends Vue {
   min-height: 2.5rem;
   display: flex;
   justify-content: flex-end;
+  align-content: center;
 }
 
 .header {
