@@ -102,7 +102,7 @@ export default class NiceNextClicker extends Vue {
 <style scoped lang="scss">
 .next-button-left, .next-button-right {
     position: relative;
-    top: -48%;
+    top: -50%;
 
     &:disabled {
         color: #cccccc;
@@ -110,7 +110,7 @@ export default class NiceNextClicker extends Vue {
 }
 
 .next-button-left {
-    left: 75%;
+    left: 60%;
 }
 
 .next-button-right {
