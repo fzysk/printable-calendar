@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
 import { CalendarState } from '../types';
 import { CalendarCreatorService } from '@/services/calendarCreator.service';
-import { CalendarEvent } from '@/models/calendar';
+import { CalendarEvent, EventImportance } from '@/models/calendar';
 
 export const mutations: MutationTree<CalendarState> = {
     makeCalendar(state, year: number) {
@@ -12,14 +12,15 @@ export const mutations: MutationTree<CalendarState> = {
         if (state.calendar) {
             // find index to insert an event
             let i = 0;
-            for (; i < state.calendar.customEvents.length; i++) {
-                const e = state.calendar.customEvents[i];
+            for (; i < state.calendar.events.length; i++) {
+                const e = state.calendar.events[i];
                 if (e.date.isAfter(event.date)) {
                     break;
                 }
             }
-
-            state.calendar.customEvents.splice(i, 0, event);
+            
+            event.importance = EventImportance.UserEvent;
+            state.calendar.events.splice(i, 0, event);
         }
     },
 
@@ -29,10 +30,13 @@ export const mutations: MutationTree<CalendarState> = {
         }
         
         events.forEach(e => {
-            for (let i = state.calendar!.customEvents.length - 1; i >= 0; i--) {
-                const event = state.calendar!.customEvents[i];
-                if (event.date.isSame(e.date) && event.text === e.text) {
-                    state.calendar!.customEvents.splice(i, 1);
+            for (let i = state.calendar!.events.length - 1; i >= 0; i--) {
+                const event = state.calendar!.events[i];
+                if (event.importance === EventImportance.UserEvent && 
+                    event.date.isSame(e.date) && 
+                    event.text === e.text) 
+                {
+                    state.calendar!.events.splice(i, 1);
                 }
             }
         });
@@ -43,10 +47,13 @@ export const mutations: MutationTree<CalendarState> = {
         }
         
         events.forEach(e => {
-            for (let i = state.calendar!.nonHolidayEvents.length - 1; i >= 0; i--) {
-                const event = state.calendar!.nonHolidayEvents[i];
-                if (event.date.isSame(e.date) && event.text === e.text) {
-                    state.calendar!.nonHolidayEvents.splice(i, 1);
+            for (let i = state.calendar!.events.length - 1; i >= 0; i--) {
+                const event = state.calendar!.events[i];
+                if (event.importance === EventImportance.NonHoliday && 
+                    event.date.isSame(e.date) && 
+                    event.text === e.text) 
+                {
+                    state.calendar!.events.splice(i, 1);
                 }
             }
         });
@@ -57,10 +64,13 @@ export const mutations: MutationTree<CalendarState> = {
         }
 
         events.forEach(e => {
-            for (let i = state.calendar!.holidays.length - 1; i >= 0; i--) {
-                const event = state.calendar!.holidays[i];
-                if (event.date.isSame(e.date) && event.text === e.text) {
-                    state.calendar!.holidays.splice(i, 1);
+            for (let i = state.calendar!.events.length - 1; i >= 0; i--) {
+                const event = state.calendar!.events[i];
+                if (event.importance === EventImportance.Holiday && 
+                    event.date.isSame(e.date) && 
+                    event.text === e.text) 
+                {
+                    state.calendar!.events.splice(i, 1);
                 }
             }
         });

@@ -1,74 +1,6 @@
 import moment, { Moment } from 'moment';
 import { ColorSettings, Style } from '@/models/colors';
 
-export interface CalendarEvent {
-    date: Moment;
-    text: string;
-    customStyle?: Style;
-}
-
-export class Calendar {
-    year: number;
-    holidays: CalendarEvent[] = [];
-    nonHolidayEvents: CalendarEvent[] = [];
-    customEvents: CalendarEvent[] = [];
-    colorSettings?: ColorSettings = undefined;
-
-    constructor(year: number, holidays?: CalendarEvent[], nonHolidayEvents?: CalendarEvent[],
-            customEvents?: CalendarEvent[], colorSettings?: ColorSettings) {
-        this.year = year;
-        this.holidays = holidays ? holidays : [];
-        this.nonHolidayEvents = nonHolidayEvents ? nonHolidayEvents : [];
-        this.customEvents = customEvents ? customEvents : [];
-        this.colorSettings = colorSettings;
-    }
-
-    getMonth(month: number) : CalendarEvent[][] {
-        const m = moment([this.year, month, 1]);
-        const daysInMonth = m.daysInMonth();
-        const result : CalendarEvent[][] = [...Array(daysInMonth).keys()].map((day) => {
-            const date = moment([this.year, month, day + 1]);
-            
-            const bussinessDay: CalendarEvent = {
-                date: date,
-                text: ''
-            };
-
-            const events: CalendarEvent[] = [];
-            
-            if (this.holidays.length > 0) {
-                const holiday = this.holidays.find((e) => e.date.isSame(date));
-
-                if (holiday) {
-                    events.push(holiday);
-                }
-            }
-            if (this.nonHolidayEvents.length > 0) {
-                const nonHolidayEvent = this.nonHolidayEvents.find((e) => e.date.isSame(date));
-
-                if (nonHolidayEvent) {
-                    events.push(nonHolidayEvent);
-                }
-            }
-            if (this.customEvents.length > 0) {
-                const customEvent = this.customEvents.find((e) => e.date.isSame(date));
-
-                if (customEvent) {
-                    events.push(customEvent);
-                }
-            }
-
-            if (events.length == 0) {
-                events.push(bussinessDay);
-            }
-
-            return events;
-        });
-
-        return result;
-    }
-}
-
 export enum Month {
     January = 0,
     February,
@@ -82,4 +14,85 @@ export enum Month {
     October,
     November,
     December
+}
+
+export enum EventImportance {
+    Holiday = 4,
+    NonHoliday = 3,
+    UserEvent = 2,
+    Normal = 1
+}
+
+export interface CalendarEvent {
+    date: Moment;
+    text: string;
+    customStyle?: Style;
+    importance?: EventImportance
+}
+
+export class Calendar {
+    year: number;
+    events: CalendarEvent[] = [];
+    colorSettings?: ColorSettings = undefined;
+
+    constructor(year: number, holidays?: CalendarEvent[], nonHoliday?: CalendarEvent[],
+            customEvents?: CalendarEvent[], colorSettings?: ColorSettings) {
+        this.year = year;
+        this.colorSettings = colorSettings;
+
+        holidays?.forEach((e) => e.importance = EventImportance.Holiday);
+        nonHoliday?.forEach((e) => e.importance = EventImportance.NonHoliday);
+        customEvents?.forEach((e) => e.importance = EventImportance.UserEvent);
+        
+        if (holidays) {
+            this.events.push(...holidays);
+        }
+        if (nonHoliday) {
+            this.events.push(...nonHoliday);
+        }
+        if (customEvents) {
+            this.events.push(...customEvents);
+        }
+    }
+
+    getMonth(month: number) : CalendarEvent[][] {
+        const m = moment([this.year, month, 1]);
+        const daysInMonth = m.daysInMonth();
+        const result : CalendarEvent[][] = [...Array(daysInMonth).keys()].map((day) => {
+            const date = moment([this.year, month, day + 1]);
+            
+            const bussinessDay: CalendarEvent = {
+                date: date,
+                text: '',
+                importance: EventImportance.Normal
+            };
+
+            const events: CalendarEvent[] = this.events.filter((e) => e.date.isSame(date));
+
+            if (events.length == 0) {
+                events.push(bussinessDay);
+            }
+
+            events.sort((a, b) => {
+                if (a.importance) {
+                    if (b.importance) {
+                        if (a.text === 'Dzień Kota' || b.text === 'Dzień Kota') {
+                            console.log(a,b, a.importance - b.importance);
+                        }
+                        return a.importance - b.importance;
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+                else {
+                    return 1;
+                }
+            })
+
+            return events;
+        });
+
+        return result;
+    }
 }

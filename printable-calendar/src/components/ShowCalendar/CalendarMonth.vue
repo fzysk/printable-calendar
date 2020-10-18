@@ -1,25 +1,35 @@
 <template>
   <div class="month">
     <template v-for="(events, i) in monthEvents" >
-        <span class="day-number" :key="5 * i">
+        <span 
+          :class="['day-number', getBackgroundClass(events)]" 
+          :style="getTextStyle(events)"
+          :key="4 * i"
+        >
           {{ toDayNumber(events[0].date) }}
         </span>
-        <span class="day-name" :key="5 * i + 1">
+        <span 
+          :class="['day-name', getBackgroundClass(events)]" 
+          :style="getTextStyle(events)"
+          :key="4 * i + 1">
           {{ toDayName(events[0].date)}}
         </span>
-        <div class="events" v-for="(evt, j) in events" :key="5 * i + 2 + j" >
-          <span style="" >{{evt.text}}</span>
-          <span class="event-divider" v-if="j != events.length - 1">/</span>
+        <div :class="['events', getBackgroundClass(events)]" :key="4 * i + 2" >
+          <template v-for="(evt, j) in events">
+            <span :style="getTextStyle([evt])" :key="2 * j">{{evt.text}}</span>
+            <span class="event-divider" v-if="j != events.length - 1" :key="2 * j + 1">/</span>
+          </template>
         </div>
-        <span class="day-divider" v-if="!lastDayOfMonth(i+1)" :key="5 * i + 3" />
+        <span class="day-divider" v-if="!lastDayOfMonth(i + 1)" :key="4 * i + 3" />
     </template>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { CalendarEvent } from "../../models/calendar";
+import { CalendarEvent, EventImportance, Calendar } from "../../models/calendar";
 import moment, { Moment } from "moment";
+import { ColorSettings, DefaultColorSettings, Style, toCssStyle } from '../../models/colors';
 
 @Component({})
 export default class CalendarMonth extends Vue {
@@ -29,10 +39,51 @@ export default class CalendarMonth extends Vue {
     return this.$store.getters["generatedCalendar/getMonthEvents"](this.month);
   }
 
+  get colorSettings(): ColorSettings | undefined {
+    return this.$store.getters["generatedCalendar/getColorSettings"];
+  }
+
   lastDayOfMonth(day: number): boolean {
     const year: number = this.$store.getters["generatedCalendar/getYear"];
     const toCompare = moment([year, this.month, day]);
     return moment(toCompare).endOf("month").add(1, "second").subtract(1, "day").isSame(toCompare);
+  }
+
+  getBackgroundClass(events: CalendarEvent[]): string {
+    let classString = '';
+    if (events?.some(e => e.importance === EventImportance.Holiday) ||
+      events?.some(e => e.date.isoWeekday() == 6 || e.date.isoWeekday() == 7)) {
+      classString = 'holiday-background';
+    }
+
+    return classString;
+  }
+
+  getTextStyle(events: CalendarEvent[]): string {
+    let colorSettings = null;
+
+    if (this.colorSettings) {
+      colorSettings = this.colorSettings;
+    }
+    else {
+      colorSettings = new DefaultColorSettings();
+    }
+
+    let style: Style;
+    if (events?.some(e => e.importance === EventImportance.Holiday)) {
+      style = colorSettings.holidayStyle;
+    }
+    else if (events?.some(e => e.importance === EventImportance.UserEvent)) {
+      style = colorSettings.customEventStyle;
+    }
+    else if (events?.some(e => e.date.isoWeekday() == 6 || e.date.isoWeekday() == 7)) {
+      style = colorSettings.weekendStyle;
+    }
+    else {
+      style = colorSettings.monthStyle; // TODO: to change to default
+    }
+
+    return toCssStyle(style);
   }
 
   toDayNumber(date: Moment): string {
@@ -47,18 +98,21 @@ export default class CalendarMonth extends Vue {
 
 <style scoped lang="scss">
 .month {
-  border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
 
   display: grid;
   grid-template-columns: 1fr 2fr 9fr;
   grid-template-rows: repeat(15, 2fr 1px);
-  column-gap: 2px;
-  row-gap: 5px;
+}
+
+.day-number, .day-name, .events {
+  padding: 2px 5px;
 }
 
 .day-number {
-  justify-self: center;
+  width: 100%;
+  text-align: center;
 }
 
 .day-name {
@@ -67,7 +121,11 @@ export default class CalendarMonth extends Vue {
 
 .day-divider {
   grid-column: 1 / span 3;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
+}
+
+.holiday-background {
+  background-color: #eee;
 }
 
 .event-divider {

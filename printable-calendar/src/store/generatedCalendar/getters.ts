@@ -1,6 +1,7 @@
 import { GetterTree } from 'vuex';
 import { CalendarState, State } from '../types';
-import { CalendarEvent } from '@/models/calendar';
+import { CalendarEvent, EventImportance } from '@/models/calendar';
+import { ColorSettings } from '@/models/colors';
 
 export const getters: GetterTree<CalendarState, State> = {
     // calendar year
@@ -14,19 +15,19 @@ export const getters: GetterTree<CalendarState, State> = {
     // calendar events 
     getCustomEvents(state): CalendarEvent[] {
         if (state.calendar) {
-            return state.calendar.customEvents;
+            return state.calendar.events.filter(x => x.importance === EventImportance.UserEvent);
         }
         return [];
     },
     getNonHolidayEvents(state): CalendarEvent[] {
         if (state.calendar) {
-            return state.calendar.nonHolidayEvents;
+            return state.calendar.events.filter(x => x.importance === EventImportance.NonHoliday);
         }
         return [];
     },
     getHolidays(state): CalendarEvent[] {
         if (state.calendar) {
-            return state.calendar.holidays;
+            return state.calendar.events.filter(x => x.importance === EventImportance.Holiday);
         }
         return [];
     },
@@ -39,5 +40,13 @@ export const getters: GetterTree<CalendarState, State> = {
             return state.calendar.getMonth(month);
         }
         return [];
+    },
+
+    getColorSettings(state): ColorSettings | undefined {
+        if (state.calendar) {
+            return state.calendar.colorSettings;
+        }
+
+        return undefined;
     }
 }
