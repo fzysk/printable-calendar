@@ -1,19 +1,18 @@
 <template>
   <div class="month">
-    <div class="day" v-for="(events, i) in monthEvents" :key="i">
-      <v-row>
-        <v-col>
-          {{ formatDate(events[0].date) }}
-        </v-col>
-        <v-col>
-          <template v-for="(evt, j) in events" >
-            <span style="" :key="2 * j">{{evt.text}}</span>
-            <span class="event-divider" v-if="j != events.length - 1" :key="2 * j + 1">/</span>
-          </template>
-        </v-col>
-      </v-row>
-      <v-divider v-if="!lastDayOfMonth(i+1)" />
-    </div>
+    <template v-for="(events, i) in monthEvents" >
+        <span class="day-number" :key="5 * i">
+          {{ toDayNumber(events[0].date) }}
+        </span>
+        <span class="day-name" :key="5 * i + 1">
+          {{ toDayName(events[0].date)}}
+        </span>
+        <div class="events" v-for="(evt, j) in events" :key="5 * i + 2 + j" >
+          <span style="" >{{evt.text}}</span>
+          <span class="event-divider" v-if="j != events.length - 1">/</span>
+        </div>
+        <span class="day-divider" v-if="!lastDayOfMonth(i+1)" :key="5 * i + 3" />
+    </template>
   </div>
 </template>
 
@@ -36,8 +35,12 @@ export default class CalendarMonth extends Vue {
     return moment(toCompare).endOf("month").add(1, "second").subtract(1, "day").isSame(toCompare);
   }
 
-  formatDate(date: Moment): string {
-    return date.format("DD");
+  toDayNumber(date: Moment): string {
+    return date.format("D");
+  }
+
+  toDayName(date: Moment): string {
+    return date.format("dddd");
   }
 }
 </script>
@@ -46,6 +49,25 @@ export default class CalendarMonth extends Vue {
 .month {
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
+
+  display: grid;
+  grid-template-columns: 1fr 2fr 9fr;
+  grid-template-rows: repeat(15, 2fr 1px);
+  column-gap: 2px;
+  row-gap: 5px;
+}
+
+.day-number {
+  justify-self: center;
+}
+
+.day-name {
+  text-transform: capitalize;
+}
+
+.day-divider {
+  grid-column: 1 / span 3;
+  border-bottom: 1px solid #eee;
 }
 
 .event-divider {

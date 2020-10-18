@@ -1,61 +1,44 @@
 <template>
   <div class="calendar">
-    <div class="calendar-header"></div>
-    <div class="month-picker">
-      <v-layout align-center justify-center row fill-height>
-        <v-slide-x-reverse-transition>
-          <v-btn
-            icon
-            v-show="hover"
-            :disabled="month == minMonth"
-            @click="decreaseMonth()"
-            @mouseenter="debounceHoverOn()"
-            @mouseleave="debounceHoverOff()"
-          >
-            <v-icon>mdi-arrow-left-bold</v-icon>
-          </v-btn>
-        </v-slide-x-reverse-transition>
-        <span
-          style=""
-          @mouseenter="debounceHoverOn()"
-          @mouseleave="debounceHoverOff()"
-          >{{ headerLocale }}
+    <nice-next-clicker 
+      clss="previous-month" 
+      :orientation='-1' 
+      :disabled='isPrevBtnDisabled' 
+      @click="currentMonth -= 1"
+    />
+    <div class="calendar-view">
+      <div class="calendar-header">
+        <span class="header">
+          {{ headerLocale }}
         </span>
-        <v-slide-x-transition>
-          <v-btn
-            icon
-            v-show="hover"
-            :disabled="month == maxMonth"
-            @click="increaseMonth()"
-            @mouseenter="debounceHoverOn()"
-            @mouseleave="debounceHoverOff()"
-          >
-            <v-icon>mdi-arrow-right-bold</v-icon>
-          </v-btn>
-        </v-slide-x-transition>
-      </v-layout>
+      </div>
+      <calendar-month :month="currentMonth" />
     </div>
-    <calendar-month :month="currentMonth" />
+    <nice-next-clicker 
+      clss="next-month" 
+      :orientation='1' 
+      :disabled='isNextBtnDisabled'
+      @click="currentMonth += 1" 
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import CalendarMonth from "../components/ShowCalendar/CalendarMonth.vue";
+import NiceNextClicker from "../components/NiceNextClicker.vue";
 import moment from "moment";
 import { Month } from "@/models/calendar";
-
-let timeout = 0;
+import { Orientation } from "@/models/orientation"
 
 @Component({
   components: {
-    CalendarMonth
+    CalendarMonth, NiceNextClicker
   }
 })
 export default class ShowCalendar extends Vue {
   readonly minMonth = Month.January;
   readonly maxMonth = Month.December;
-  hover = false;
   month: Month = Month.January;
 
   get currentMonth() {
@@ -67,8 +50,14 @@ export default class ShowCalendar extends Vue {
 
   get headerLocale() {
     const year = this.$store.getters["generatedCalendar/getYear"];
-    moment.locale("pl");
     return moment([year, this.currentMonth, 1]).format("MMMM YYYY");
+  }
+
+  get isPrevBtnDisabled() {
+    return this.month == this.minMonth;
+  }
+  get isNextBtnDisabled() {
+    return this.month == this.maxMonth;
   }
 
   // month change methods
@@ -82,36 +71,59 @@ export default class ShowCalendar extends Vue {
       this.month -= 1;
     }
   }
-
-  // debounce methods
-  debounceHover(func: Function) {
-    clearTimeout(timeout);
-    timeout = setTimeout(func, 100);
-  }
-  debounceHoverOn() {
-    this.debounceHover(() => {
-      this.hover = true;
-    });
-  }
-  debounceHoverOff() {
-    this.debounceHover(() => {
-      this.hover = false;
-    });
-  }
 }
 </script>
 
 <style scoped lang="scss">
+@media print {
+  @page {
+    size: 21cm 29.7cm;
+    margin: 3mm 10mm 3mm 4mm;
+  }
+
+  .calendar-view {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0;
+    line-height: 23px;
+  }
+}
+
 .calendar {
-  margin: 15px;
-  border-bottom: 1px solid #eee;
+  display: grid;
+  grid-template-columns: 0.5fr 3fr 0.5fr;
+  grid-template-rows: 0.5fr 12fr 0.5fr; 
+}
+
+.previous-month {
+  grid-area: 2 / 1 / 3 / 2; 
+}
+
+.calendar-view {
+  grid-area: 2 / 2 / 3 / 3;
+}
+
+.next-month {
+  grid-area: 2 / 3 / 3 / 4;
 }
 
 .calendar-header {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #005792;
+  color: white;
   border: 1px solid #eee;
   border-radius: 11px 11px 0px 0px;
-  min-height: 2rem;
+  min-height: 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header {
+  font-size: 25px;
+  text-transform: capitalize;
+  margin-right: 0.5rem
 }
 
 .month-picker {
