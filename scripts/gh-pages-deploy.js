@@ -6,7 +6,6 @@ const fs = require("fs");
     const currentBranch = await execa("git", ["rev-parse", "--abbrev-ref", "HEAD"]);
     
     console.log("Prepare to build...");
-    await execa("git", ["branch", "-D", "gh-pages"]);
     await execa("git", ["checkout", "--orphan", "gh-pages"]);
     // eslint-disable-next-line no-console
     console.log("Building started...");

@@ -1,3 +1,4 @@
 module.exports = {
-    publicPath: 'printable-calendar'
+    publicPath: './',
+    runtimeCompiler: true,
 }
