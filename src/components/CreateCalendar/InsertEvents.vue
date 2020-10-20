@@ -248,12 +248,10 @@ export default class InsertEvents extends Vue {
   // calendar range
   get minCalendarDate() {
     const year = this.$store.getters["generatedCalendar/getYear"];
-
     return year + "-01-01";
   }
   get maxCalendarDate() {
     const year = this.$store.getters["generatedCalendar/getYear"];
-
     return year + "-12-31";
   }
 

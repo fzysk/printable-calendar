@@ -9,6 +9,9 @@
 <script>
 // @ is an alias to /src
 import HomeInfo from "@/components/Home/HomeInfo.vue";
+import moment from "moment";
+
+moment.locale("pl");
 
 export default {
   name: "Home",

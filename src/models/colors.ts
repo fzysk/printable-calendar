@@ -10,6 +10,12 @@ export interface Style {
     text: TextSettings;
 }
 
+export function toCssStyle(style: Style) {
+    return 'color: ' + style.color + '; ' +
+        'font-size: ' + style.text.size + '; ' +
+        'font-family: ' + style.text.fontFamily + '; ';
+}
+
 export interface TextSettings {
     size: number;
     fontFamily: string;

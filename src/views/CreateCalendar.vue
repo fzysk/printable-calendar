@@ -40,11 +40,7 @@
               >
             </v-col>
             <v-col cols="auto">
-              <v-btn
-                class="white--text"
-                color="indigo"
-                large
-                @click="currentStep += 1"
+              <v-btn class="white--text" color="indigo" large to="show-calendar"
                 >Dalej</v-btn
               >
             </v-col>
@@ -56,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import SelectYear from "../components/CreateCalendar/SelectYear.vue";
 import InsertEvents from "../components/CreateCalendar/InsertEvents.vue";
 import SelectColors from "../components/CreateCalendar/SelectColors.vue";
