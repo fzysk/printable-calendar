@@ -76,14 +76,14 @@ export default class ShowCalendar extends Vue {
 @media print {
   @page {
     size: 21cm 29.7cm;
-    margin: 3mm 10mm 3mm 4mm;
+    margin: 3mm 5mm 5mm 3mm;
   }
 
   .calendar-view {
     height: 100%;
     width: 100%;
     position: fixed;
-    top: 0;
+    top: 10mm;
     left: 0;
     padding: 0;
     line-height: 23px;

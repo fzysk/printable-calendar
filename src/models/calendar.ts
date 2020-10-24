@@ -67,19 +67,16 @@ export class Calendar {
                 importance: EventImportance.Normal
             };
 
-            const events: CalendarEvent[] = this.events.filter((e) => e.date.isSame(date));
+            let events: CalendarEvent[] = this.events.filter((e) => e.date.isSame(date));
 
             if (events.length == 0) {
                 events.push(bussinessDay);
             }
 
-            events.sort((a, b) => {
+            events = events.sort((a, b) => {
                 if (a.importance) {
                     if (b.importance) {
-                        if (a.text === 'Dzień Kota' || b.text === 'Dzień Kota') {
-                            console.log(a,b, a.importance - b.importance);
-                        }
-                        return a.importance - b.importance;
+                        return b.importance - a.importance;
                     }
                     else {
                         return -1;
@@ -88,7 +85,7 @@ export class Calendar {
                 else {
                     return 1;
                 }
-            })
+            });
 
             return events;
         });
