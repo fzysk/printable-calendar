@@ -34,7 +34,8 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   mode: 'history',
-  routes
+  routes,
+  base: 'printable-calendar'
 });
 
 export default router;
