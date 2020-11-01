@@ -123,7 +123,7 @@ export default class ShowCalendar extends Vue {
   border-radius: 11px 11px 0px 0px;
   min-height: 2.5rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-content: center;
 }
 

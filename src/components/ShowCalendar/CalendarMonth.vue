@@ -1,6 +1,6 @@
 <template>
   <div class="month">
-    <template v-for="(events, i) in monthEvents" >
+    <template v-for="(events, i) in monthEvents">
         <span 
           :class="['day-number', getBackgroundClass(events)]" 
           :style="getTextStyle(events)"
@@ -50,10 +50,10 @@ export default class CalendarMonth extends Vue {
   }
 
   getBackgroundClass(events: CalendarEvent[]): string {
-    let classString = '';
+    let classString = "";
     if (events?.some(e => e.importance === EventImportance.Holiday) ||
       events?.some(e => e.date.isoWeekday() == 6 || e.date.isoWeekday() == 7)) {
-      classString = 'holiday-background';
+      classString = "holiday-background";
     }
 
     return classString;
@@ -72,11 +72,12 @@ export default class CalendarMonth extends Vue {
     let style: Style;
     if (events?.some(e => e.importance === EventImportance.Holiday)) {
       style = colorSettings.holidayStyle;
-    }
-    else if (events?.some(e => e.date.isoWeekday() == 6 || e.date.isoWeekday() == 7)) {
+    } 
+    else if (events?.some(e => e.date.isoWeekday() == 7)) {
       style = colorSettings.weekendStyle;
     }
-    else if (!onlyHolidayColor && events?.some(e => e.importance === EventImportance.UserEvent)) {
+    else if (events?.some(e => e.date.isoWeekday() == 6) || 
+    (!onlyHolidayColor && events?.some(e => e.importance === EventImportance.UserEvent))) {
       style = colorSettings.customEventStyle;
     }
     else {
