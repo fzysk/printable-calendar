@@ -16,7 +16,7 @@
         </span>
         <div :class="['events', getBackgroundClass(events)]" :key="4 * i + 2" >
           <template v-for="(evt, j) in events">
-            <span :style="getTextStyle([evt], false)" :key="2 * j">{{evt.text}}</span>
+            <span :style="getTextStyle(events, false)" :key="2 * j">{{evt.text}}</span>
             <span class="event-divider" v-if="j != events.length - 1" :key="2 * j + 1">/</span>
           </template>
         </div>
@@ -71,17 +71,28 @@ export default class CalendarMonth extends Vue {
 
     let style: Style;
     if (events?.some(e => e.importance === EventImportance.Holiday)) {
+      if (events.some(e => e.text === "AA")) {
+        console.log("1st", events);
+      }
+
       style = colorSettings.holidayStyle;
     } 
     else if (events?.some(e => e.date.isoWeekday() == 7)) {
+      if (events.some(e => e.text === "AA")) {
+        console.log("2nd", events);
+      }
       style = colorSettings.weekendStyle;
     }
     else if (events?.some(e => e.date.isoWeekday() == 6) || 
     (!onlyHolidayColor && events?.some(e => e.importance === EventImportance.UserEvent))) {
+      if (events.some(e => e.text === "AA")) {
+        console.log("3rd", events);
+        console.log(events[0].date.isoWeekday());
+      }
       style = colorSettings.customEventStyle;
     }
     else {
-      style = colorSettings.monthStyle; // TODO: to change to default
+      style = colorSettings.defaultStyle; // TODO: to change to default
     }
 
     return toCssStyle(style);

@@ -3,6 +3,7 @@ export interface ColorSettings {
     holidayStyle: Style;
     weekendStyle: Style;
     monthStyle: Style;
+    defaultStyle: Style;
 }
 
 export interface Style {
@@ -12,8 +13,8 @@ export interface Style {
 
 export function toCssStyle(style: Style) {
     return 'color: ' + style.color + '; ' +
-        'font-size: ' + style.text.size + '; ' +
-        'font-family: ' + style.text.fontFamily + '; ';
+    'font-family: ' + style.text.fontFamily + '; ' +
+    'font-size: ' + style.text.size + 'px;';
 }
 
 export interface TextSettings {
@@ -35,7 +36,7 @@ export class DefaultColorSettings implements ColorSettings {
     customEventStyle: Style = { 
         color: "#6202AB", 
         text: {
-            size: 12,
+            size: 20,
             fontFamily: "Arial",
             placement: TextPlacement.Left,
             bold: true,
@@ -46,7 +47,7 @@ export class DefaultColorSettings implements ColorSettings {
     holidayStyle: Style = { 
         color: "#bf0000", 
         text: {
-            size: 12,
+            size: 20,
             fontFamily: "Arial",
             placement: TextPlacement.Left,
             bold: true,
@@ -57,7 +58,7 @@ export class DefaultColorSettings implements ColorSettings {
     weekendStyle: Style = { 
         color: "#bf0000", 
         text: {
-            size: 12,
+            size: 20,
             fontFamily: "Arial",
             placement: TextPlacement.Left,
             bold: true,
@@ -66,15 +67,26 @@ export class DefaultColorSettings implements ColorSettings {
         },
     };
     monthStyle: Style = { 
-        color: "#333333", 
+        color: "#ffffff", 
         text: {
-            size: 15,
+            size: 30,
             fontFamily: "Arial",
             placement: TextPlacement.Center,
             bold: true,
             italic: false,
             underline: false
         },
+    };
+    defaultStyle: Style = {
+        color: "#333333",
+        text: {
+            size: 20,
+            fontFamily: "Arial",
+            placement: TextPlacement.Left,
+            bold: false,
+            italic: false,
+            underline: false
+        }
     };
 }
 
@@ -83,8 +95,8 @@ const allColors = [
     "#1FBC9C", "#1CA085", "#2ECC70", "#27AF60", // green
     "#3398DB", "#2980B9", "#A463BF", "#8E43AD", // blue
     "#3D556E", "#222F3D", "#F2C511", "#F39C19", // black and yellow
-    "#E84B3C", "#C0382B", "#DDE6E8", "#BDC3C8",  // red and white
-    multiColor                                          // empty for multicolor
+    "#E84B3C", "#C0382B", "#DDE6E8", "#BDC3C8", // red and white
+    multiColor                                  // empty for multicolor
 ];
 
 const titleColors = [

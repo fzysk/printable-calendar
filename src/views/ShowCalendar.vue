@@ -90,7 +90,7 @@ export default class ShowCalendar extends Vue {
   }
 
   .header {
-    margin-top: 0.4rem;
+    margin-top: 0.5rem!important;
   }
 
   .previous-month, .next-month {
@@ -128,9 +128,9 @@ export default class ShowCalendar extends Vue {
 }
 
 .header {
-  font-size: 25px;
+  font-size: 30px;
   text-transform: capitalize;
-  margin-right: 0.5rem
+  margin-right: 0 0.5rem;
 }
 
 .month-picker {
