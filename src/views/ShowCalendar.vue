@@ -1,23 +1,37 @@
 <template>
-  <div class="calendar">
-    <nice-next-clicker 
-      clss="previous-month" 
-      :orientation='-1' 
-      :disabled='isPrevBtnDisabled' 
-      @click="currentMonth -= 1"
-    />
-    <div class="calendar-view">
-      <div class="calendar-header">
-        <span class="header">{{ headerLocale }}</span>
-      </div>
-      <calendar-month :month="currentMonth" />
+  <div>
+    <div class="saver">
+      <v-btn
+        class="ma-2"
+        outlined
+        large
+        fab
+        color="indigo"
+        @click="exportCalendar"
+      >
+        <v-icon>mdi-content-save-outline</v-icon>
+      </v-btn>
     </div>
-    <nice-next-clicker 
-      clss="next-month" 
-      :orientation='1' 
-      :disabled='isNextBtnDisabled'
-      @click="currentMonth += 1" 
-    />
+    <div class="calendar">
+      <nice-next-clicker 
+        clss="previous-month" 
+        :orientation='-1' 
+        :disabled='isPrevBtnDisabled' 
+        @click="currentMonth -= 1"
+      />
+      <div class="calendar-view">
+        <div class="calendar-header">
+          <span class="header">{{ headerLocale }}</span>
+        </div>
+        <calendar-month :month="currentMonth" />
+      </div>
+      <nice-next-clicker 
+        clss="next-month" 
+        :orientation='1' 
+        :disabled='isNextBtnDisabled'
+        @click="currentMonth += 1" 
+      />
+    </div>
   </div>
 </template>
 
@@ -26,8 +40,9 @@ import { Component, Vue } from "vue-property-decorator";
 import CalendarMonth from "../components/ShowCalendar/CalendarMonth.vue";
 import NiceNextClicker from "../components/NiceNextClicker.vue";
 import moment from "moment";
-import { Month } from "@/models/calendar";
+import { Month, Calendar } from "@/models/calendar";
 import { Orientation } from "@/models/orientation"
+import FileSaver from "file-saver";
 
 @Component({
   components: {
@@ -68,6 +83,13 @@ export default class ShowCalendar extends Vue {
     if (this.month != this.minMonth) {
       this.month -= 1;
     }
+  }
+
+  exportCalendar() {
+    const calendar: Calendar = this.$store.getters["generatedCalendar/getCalendar"];
+    const blob = new Blob([JSON.stringify(calendar)], { type: "application/json"});
+
+    FileSaver.saveAs(blob, `calendar-${calendar.year}.json`);
   }
 }
 </script>
@@ -137,5 +159,12 @@ export default class ShowCalendar extends Vue {
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
   height: 2.2rem;
+}
+
+.saver {
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  box-shadow: 0px 0px 10px 2px rgba(51,51,51,0.5);
 }
 </style>

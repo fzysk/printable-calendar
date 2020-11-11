@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex';
 import { CalendarState, State } from '../types';
-import { CalendarEvent, EventImportance } from '@/models/calendar';
+import { CalendarEvent, EventImportance, Calendar } from '@/models/calendar';
 import { ColorSettings } from '@/models/colors';
 
 export const getters: GetterTree<CalendarState, State> = {
@@ -48,5 +48,9 @@ export const getters: GetterTree<CalendarState, State> = {
         }
 
         return undefined;
+    },
+
+    getCalendar(state): Calendar | undefined {
+        return state.calendar;
     }
 }
