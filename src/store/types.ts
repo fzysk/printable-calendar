@@ -10,6 +10,6 @@ export interface CalendarState {
 }
 
 export interface ImportInfo {
-    error: boolean,
-    message: string
+    errorMessage: string,
+    importedCalendar: Calendar
 }

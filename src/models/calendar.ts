@@ -27,7 +27,8 @@ export interface CalendarEvent {
     date: Moment;
     text: string;
     customStyle?: Style;
-    importance?: EventImportance
+    importance?: EventImportance;
+    isMoveable?: boolean;
 }
 
 export class Calendar {

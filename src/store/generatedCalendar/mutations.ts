@@ -1,11 +1,34 @@
 import { MutationTree } from 'vuex';
 import { CalendarState } from '../types';
 import { CalendarCreatorService } from '@/services/calendarCreator.service';
-import { CalendarEvent, EventImportance } from '@/models/calendar';
+import { CalendarEvent, EventImportance, Calendar } from '@/models/calendar';
 
 export const mutations: MutationTree<CalendarState> = {
     makeCalendar(state, year: number) {
-        state.calendar = CalendarCreatorService.GenerateCalendar(year);
+        if (state.import) {
+            const deletedEvents = 
+                CalendarCreatorService.MoveCalendarToYear(state.import.importedCalendar, year);
+            
+            state.import.errorMessage = `Poniższe wydarzenia zostały usunięte: 
+            ${deletedEvents.map(e => `"${e.text}"`).join(", ")}
+            gdyż zmieniony rok z przęstępnego na zwykły.`;
+            
+            state.calendar = state.import.importedCalendar;
+        }
+        else {
+            state.calendar = CalendarCreatorService.GenerateCalendar(year);
+        }
+    },
+
+    importCalendar(state, data: string) {
+        const parsed = JSON.parse(data) as Calendar;
+        let message = "";
+
+        if (!parsed.events) {
+            message = "Błędny format pliku!";
+        }
+        
+        state.import = { errorMessage: message, importedCalendar: parsed };
     },
 
     addCustomEvent(state, event: CalendarEvent) {

@@ -4,6 +4,30 @@ import { EasterFinder } from './easterFinder.service';
 import { DefaultColorSettings } from '@/models/colors';
 
 export class CalendarCreatorService {
+    public static MoveCalendarToYear(calendar: Calendar, year: number): CalendarEvent[] {
+        const isNewYearLeap = moment([year]).isLeapYear();
+        const leapEvents: CalendarEvent[] = [];
+
+        console.log(calendar.events[0].date)
+
+        if (!isNewYearLeap && calendar.events.some(e => e.date.isLeapYear())) {
+            leapEvents.push(...calendar.events.filter(e => e.date.isLeapYear()));
+        }
+        
+        calendar.year = year;
+
+        if (!isNewYearLeap) {
+            calendar.events = calendar.events.filter(e => e.date.isLeapYear());
+        }
+        calendar.events.forEach(e => e.date.add("year", year - calendar.year));
+        calendar.events = calendar.events
+            .filter(e => !e.isMoveable)
+            .concat(this.GenerateNonHolidayEasterEvents(calendar.year))
+            .concat(this.GenerateHolidayEasterEvents(calendar.year));
+
+        return leapEvents;
+    }
+
     public static GenerateCalendar(year: number) : Calendar {
         return new Calendar(year, this.GenerateHolidays(year), this.GenerateNonHolidays(year), undefined, new DefaultColorSettings);
     }
@@ -60,18 +84,11 @@ export class CalendarCreatorService {
             { date: moment([year, Month.December, 31]), text: 'Sylwester' },
         ];
 
-        const easter: Moment = EasterFinder.GetDate(year);
-        const moveableEvents: CalendarEvent[] = [
-            { date: easter.clone().add(-52, "days"), text: 'Tłusty Czwartek' },
-            { date: easter.clone().add(-46, "days"), text: 'Środa Popielcowa' },
-            { date: easter.clone().add(-3, "days"), text: 'Wielki Czwartek' },
-            { date: easter.clone().add(-2, "days"), text: 'Wielki Piątek' },
-            { date: easter.clone().add(-1, "days"), text: 'Wielka Sobota' },
-        ];
+        
 
         const events: CalendarEvent[] = [];
         events.push(...nonMoveableEvents);
-        events.push(...moveableEvents);
+        events.push(...this.GenerateNonHolidayEasterEvents(year));
         events.sort((a, b) => {
             if (a.date < b.date) return -1;
             if (a.date > b.date) return 1;
@@ -93,17 +110,9 @@ export class CalendarCreatorService {
             { date: moment([year, Month.December, 26]), text: 'Boże Narodzenie' },
         ];
 
-        const easter: Moment = EasterFinder.GetDate(year);
-        const moveableEvents: CalendarEvent[] = [
-            { date: easter, text: 'Wielkanoc' },
-            { date: easter.clone().add(1, "day"), text: 'Poniedziałek Wielkanocny' },
-            { date: easter.clone().add(60, "days"), text: 'Boże Ciało' },
-            { date: easter.clone().add(7, "weeks"), text: 'Zielone Świątki' },
-        ];
-
         const events: CalendarEvent[] = [];
         events.push(...nonMoveableEvents);
-        events.push(...moveableEvents);
+        events.push(...this.GenerateHolidayEasterEvents(year));
         events.sort((a, b) => {
             if (a.date < b.date) return -1;
             if (a.date > b.date) return 1;
@@ -111,5 +120,30 @@ export class CalendarCreatorService {
         })
 
         return events;
+    }
+
+    private static GenerateNonHolidayEasterEvents(year: number): CalendarEvent[] {
+        const easter: Moment = EasterFinder.GetDate(year);
+        const moveableEvents: CalendarEvent[] = [
+            { date: easter.clone().add(-52, "days"), text: 'Tłusty Czwartek', isMoveable: true },
+            { date: easter.clone().add(-46, "days"), text: 'Środa Popielcowa', isMoveable: true },
+            { date: easter.clone().add(-3, "days"), text: 'Wielki Czwartek', isMoveable: true },
+            { date: easter.clone().add(-2, "days"), text: 'Wielki Piątek', isMoveable: true },
+            { date: easter.clone().add(-1, "days"), text: 'Wielka Sobota', isMoveable: true },
+        ];
+
+        return moveableEvents;
+    }
+
+    private static GenerateHolidayEasterEvents(year: number): CalendarEvent[] {
+        const easter: Moment = EasterFinder.GetDate(year);
+        const moveableEvents: CalendarEvent[] = [
+            { date: easter, text: 'Wielkanoc', isMoveable: true },
+            { date: easter.clone().add(1, "day"), text: 'Poniedziałek Wielkanocny', isMoveable: true },
+            { date: easter.clone().add(60, "days"), text: 'Boże Ciało', isMoveable: true },
+            { date: easter.clone().add(7, "weeks"), text: 'Zielone Świątki', isMoveable: true },
+        ];
+
+        return moveableEvents;
     }
 }
