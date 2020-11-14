@@ -2,6 +2,7 @@ import { MutationTree } from 'vuex';
 import { CalendarState } from '../types';
 import { CalendarCreatorService } from '@/services/calendarCreator.service';
 import { CalendarEvent, EventImportance, Calendar } from '@/models/calendar';
+import moment from 'moment';
 
 export const mutations: MutationTree<CalendarState> = {
     makeCalendar(state, year: number) {
@@ -21,12 +22,17 @@ export const mutations: MutationTree<CalendarState> = {
     },
 
     importCalendar(state, data: string) {
-        const parsed = JSON.parse(data) as Calendar;
+        let parsed = JSON.parse(data) as Calendar;
         let message = "";
 
         if (!parsed.events) {
             message = "Błędny format pliku!";
         }
+
+        parsed.events.forEach(e => {
+            e.date = moment(e.date);
+        })
+        parsed = new Calendar(parsed.year, parsed.events, parsed.colorSettings);
         
         state.import = { errorMessage: message, importedCalendar: parsed };
     },

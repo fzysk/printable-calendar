@@ -36,24 +36,10 @@ export class Calendar {
     events: CalendarEvent[] = [];
     colorSettings?: ColorSettings = undefined;
 
-    constructor(year: number, holidays?: CalendarEvent[], nonHoliday?: CalendarEvent[],
-            customEvents?: CalendarEvent[], colorSettings?: ColorSettings) {
+    constructor(year: number, events: CalendarEvent[], colorSettings?: ColorSettings) {
         this.year = year;
         this.colorSettings = colorSettings;
-
-        holidays?.forEach((e) => e.importance = EventImportance.Holiday);
-        nonHoliday?.forEach((e) => e.importance = EventImportance.NonHoliday);
-        customEvents?.forEach((e) => e.importance = EventImportance.UserEvent);
-        
-        if (holidays) {
-            this.events.push(...holidays);
-        }
-        if (nonHoliday) {
-            this.events.push(...nonHoliday);
-        }
-        if (customEvents) {
-            this.events.push(...customEvents);
-        }
+        this.events = events;
     }
 
     getMonth(month: number) : CalendarEvent[][] {

@@ -13,10 +13,10 @@
       </v-btn>
     </div>
     <div class="calendar">
-      <nice-next-clicker 
-        clss="previous-month" 
-        :orientation='-1' 
-        :disabled='isPrevBtnDisabled' 
+      <nice-next-clicker
+        clss="previous-month"
+        :orientation='-1'
+        :disabled='isPrevBtnDisabled'
         @click="currentMonth -= 1"
       />
       <div class="calendar-view">
@@ -25,11 +25,11 @@
         </div>
         <calendar-month :month="currentMonth" />
       </div>
-      <nice-next-clicker 
-        clss="next-month" 
-        :orientation='1' 
+      <nice-next-clicker
+        clss="next-month"
+        :orientation='1'
         :disabled='isNextBtnDisabled'
-        @click="currentMonth += 1" 
+        @click="currentMonth += 1"
       />
     </div>
   </div>
@@ -41,12 +41,12 @@ import CalendarMonth from "../components/ShowCalendar/CalendarMonth.vue";
 import NiceNextClicker from "../components/NiceNextClicker.vue";
 import moment from "moment";
 import { Month, Calendar } from "@/models/calendar";
-import { Orientation } from "@/models/orientation"
 import FileSaver from "file-saver";
 
 @Component({
   components: {
-    CalendarMonth, NiceNextClicker
+    CalendarMonth,
+    NiceNextClicker
   }
 })
 export default class ShowCalendar extends Vue {
@@ -112,10 +112,11 @@ export default class ShowCalendar extends Vue {
   }
 
   .header {
-    margin-top: 0.5rem!important;
+    margin-top: 0.5rem !important;
   }
 
-  .previous-month, .next-month {
+  .previous-month,
+  .next-month {
     display: none;
   }
 }
@@ -123,11 +124,11 @@ export default class ShowCalendar extends Vue {
 .calendar {
   display: grid;
   grid-template-columns: 0.5fr 3fr 0.5fr;
-  grid-template-rows: 0.5fr 12fr 0.5fr; 
+  grid-template-rows: 0.5fr 12fr 0.5fr;
 }
 
 .previous-month {
-  grid-area: 2 / 1 / 3 / 2; 
+  grid-area: 2 / 1 / 3 / 2;
 }
 
 .calendar-view {
@@ -165,6 +166,6 @@ export default class ShowCalendar extends Vue {
   display: flex;
   justify-content: flex-end;
   align-content: center;
-  box-shadow: 0px 0px 10px 2px rgba(51,51,51,0.5);
+  box-shadow: 0px 0px 10px 2px rgba(51, 51, 51, 0.5);
 }
 </style>
