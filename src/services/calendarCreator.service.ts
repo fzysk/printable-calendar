@@ -6,14 +6,17 @@ import { DefaultColorSettings } from '@/models/colors';
 export class CalendarCreatorService {
     public static MoveCalendarToYear(calendar: Calendar, year: number): CalendarEvent[] {
         const isNewYearLeap = moment([year]).isLeapYear();
+        const leapDay: Moment | undefined = isNewYearLeap ? moment([year, Month.February, 29]) : undefined;
         const leapEvents: CalendarEvent[] = [];
 
-        if (!isNewYearLeap && calendar.events.some(e => e.date.isLeapYear())) {
-            leapEvents.push(...calendar.events.filter(e => e.date.isLeapYear()));
+        const leapCheck: Function = (e: CalendarEvent) => e.date.isSame(leapDay);
+
+        if (!isNewYearLeap && calendar.events.some(e => leapCheck(e))) {
+            leapEvents.push(...calendar.events.filter(e => leapCheck(e)));
         }
 
         if (!isNewYearLeap) {
-            calendar.events = calendar.events.filter(e => !e.date.isLeapYear());
+            calendar.events = calendar.events.filter(e => !leapCheck(e));
         }
 
         calendar.events.forEach(e => e.date = e.date.add(year - calendar.year, "y"));
