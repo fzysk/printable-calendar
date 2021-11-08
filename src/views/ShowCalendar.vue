@@ -2,6 +2,7 @@
   <div>
     <div class="saver">
       <v-btn
+        id="exportButton"
         class="ma-2"
         outlined
         large
@@ -105,7 +106,7 @@ export default class ShowCalendar extends Vue {
     height: 100%;
     width: 100%;
     position: fixed;
-    top: 10mm;
+    top: 17.5mm;
     left: 0;
     padding: 0;
     line-height: 23px;
@@ -116,8 +117,13 @@ export default class ShowCalendar extends Vue {
   }
 
   .previous-month,
-  .next-month {
+  .next-month,
+  #exportButton {
     display: none;
+  }
+
+  .saver {
+    box-shadow: none !important;
   }
 }
 
